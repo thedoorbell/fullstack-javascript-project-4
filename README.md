@@ -18,3 +18,7 @@ $ npm install
 ### page-loader - download HTML page demo-run
 
 [![asciicast](https://asciinema.org/a/xt1Kch8zUDtulHJsPgcYUKL4x.svg)](https://asciinema.org/a/xt1Kch8zUDtulHJsPgcYUKL4x)
+
+### page-loader - download HTML+images demo-run
+
+[![asciicast](https://asciinema.org/a/HbRRWBNE3aYw2uMwa7ApGDTMi.svg)](https://asciinema.org/a/HbRRWBNE3aYw2uMwa7ApGDTMi)
