@@ -27,23 +27,36 @@ beforeEach(async () => {
 test('page-loader', async () => {
   nock('https://ru.hexlet.io')
     .get('/courses')
+    .times(2)
     .reply(200, html)
   nock('https://ru.hexlet.io')
     .get('/assets/professions/nodejs.png')
     .reply(200, testImage)
+  nock('https://ru.hexlet.io')
+    .get('/assets/application.css')
+    .reply(200, 'css {}')
+  nock('https://ru.hexlet.io')
+    .get('/packs/js/runtime.js')
+    .reply(200, 'js {}')
 
   const expectedFilePath = path.join(tempDir, 'ru-hexlet-io-courses.html')
   const expectedFilesDir = path.join(tempDir, 'ru-hexlet-io-courses_files')
   const imagePath = path.join(expectedFilesDir, 'ru-hexlet-io-assets-professions-nodejs.png')
+  const linkPath = path.join(expectedFilesDir, 'ru-hexlet-io-assets-application.css')
+  const scriptPath = path.join(expectedFilesDir, 'ru-hexlet-io-packs-js-runtime.js')
 
   const receivedFilePath = await downloadPage('https://ru.hexlet.io/courses', tempDir)
   const downloadedHtml = await fsp.readFile(receivedFilePath, 'utf-8')
   const downloadedImage = await fsp.readFile(imagePath)
+  const downloadedLink = await fsp.readFile(linkPath, 'utf-8')
+  const downloadedScript = await fsp.readFile(scriptPath, 'utf-8')
 
   expect(receivedFilePath).toBe(expectedFilePath)
   expect(downloadedHtml).toBe(expectedHtml)
   await expect(fsp.access(expectedFilesDir)).resolves.not.toThrow()
   expect(downloadedImage).toEqual(testImage)
+  expect(downloadedLink).toBe('css {}')
+  expect(downloadedScript).toBe('js {}')
 })
 
 test('page-loader no such directory', async () => {
