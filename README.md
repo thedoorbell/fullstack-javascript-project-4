@@ -26,3 +26,7 @@ $ npm install
 ### page-loader - download HTML+resources (img, link, script) demo-run
 
 [![asciicast](https://asciinema.org/a/THhoa6jKByM2sczPPVcxlbx8K.svg)](https://asciinema.org/a/THhoa6jKByM2sczPPVcxlbx8K)
+
+### page-loader - debug+nock logging demo-run
+
+[![asciicast](https://asciinema.org/a/qXnCpnnSu6T2eqyjderjqIuxu.svg)](https://asciinema.org/a/qXnCpnnSu6T2eqyjderjqIuxu)
