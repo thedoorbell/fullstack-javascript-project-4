@@ -49,9 +49,14 @@ const downloadPage = (url, outputDir) => {
       return filePath
     })
     .catch((err) => {
-      // console.error('Full error:', err)
       log('error: %s', err.message)
-      throw new Error(`Error: ${err.message}`)
+      if (err.code === 'ENOENT') {
+        throw new Error(`ERROR: No such output directory - ${outputDir}`)
+      }
+      if (err.code === 'EACCES') {
+        throw new Error(`ERROR: No access to output directory - ${outputDir}`)
+      }
+      throw new Error(`ERROR: ${err.message}`)
     })
 }
 

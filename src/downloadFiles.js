@@ -42,6 +42,10 @@ const downloadFiles = ($, url, filesDirPath, selector, attr) => {
             }
           })
         })
+        .catch((err) => {
+          log('failed to download %s: %s', absLink.href, err.message)
+          throw new Error(`Cant load file ${absLink.href}`)
+        })
     }),
     ))
 }

@@ -11,7 +11,14 @@ program
   .option('-o, --output [dir]', 'output dir', process.cwd())
   .action((url, options) => {
     downloadPage(url, options.output)
-      .then(filePath => console.log(filePath))
+      .then((filePath) => {
+        console.log(filePath)
+        process.exit(0)
+      })
+      .catch((err) => {
+        console.error(err.message)
+        process.exit(1)
+      })
   })
 
 program.parse()

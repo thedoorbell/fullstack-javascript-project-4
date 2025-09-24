@@ -24,5 +24,9 @@ axiosDebugLog({
 const getData = url => axios
   .get(url, { responseType: 'arraybuffer' })
   .then(response => response.data)
+  .catch((err) => {
+    log(`Error: ${err.message}`)
+    throw new Error(`Cant get ${url} - ${err.message}`)
+  })
 
 export default getData
