@@ -30,3 +30,7 @@ $ npm install
 ### page-loader - debug+nock logging demo-run
 
 [![asciicast](https://asciinema.org/a/qXnCpnnSu6T2eqyjderjqIuxu.svg)](https://asciinema.org/a/qXnCpnnSu6T2eqyjderjqIuxu)
+
+### page-loader - getting errors demo-run
+
+[![asciicast](https://asciinema.org/a/kkjBtoQgflzBLiNDwT5KHhM1b.svg)](https://asciinema.org/a/kkjBtoQgflzBLiNDwT5KHhM1b)
