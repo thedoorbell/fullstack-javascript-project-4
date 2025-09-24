@@ -59,11 +59,30 @@ test('page-loader', async () => {
   expect(downloadedScript).toBe('js {}')
 })
 
-test('page-loader no such directory', async () => {
+test('page-loader: network errors', async () => {
   nock('https://ru.hexlet.io')
     .get('/courses')
+    .reply(404)
+  nock('https://ru.hexlet.io')
+    .get('/assets/professions/nodejs.png')
+    .reply(500)
+
+  await expect(downloadPage('https://ru.hexlet.io/courses', tempDir))
+    .rejects
+    .toThrow('Cant get https://ru.hexlet.io/courses - Request failed with status code 404')
+  await expect(downloadPage('https://ru.hexlet.io/assets/professions/nodejs.png', tempDir))
+    .rejects
+    .toThrow('Cant get https://ru.hexlet.io/assets/professions/nodejs.png - Request failed with status code 500')
+})
+
+test('page-loader: file operation errors', async () => {
+  nock('https://ru.hexlet.io')
+    .get('/courses')
+    .times(2)
     .reply(200, html)
 
-  await expect(downloadPage('https://ru.hexlet.io/courses', 'unexistingDir'))
-    .rejects.toThrow()
+  await expect(downloadPage('https://ru.hexlet.io/courses', '/unexisting'))
+    .rejects.toThrow('ERROR: No such output directory - /unexisting')
+  await expect(downloadPage('https://ru.hexlet.io/courses', '/root'))
+    .rejects.toThrow('ERROR: No access to output directory - /root')
 })
