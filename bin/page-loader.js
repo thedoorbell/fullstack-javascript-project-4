@@ -12,7 +12,7 @@ program
   .action((url, options) => {
     downloadPage(url, options.output)
       .then((filePath) => {
-        console.log(filePath)
+        console.log(`Page was successfully downloaded into ${filePath}`)
         process.exit(0)
       })
       .catch((err) => {
