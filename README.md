@@ -34,3 +34,7 @@ $ npm install
 ### page-loader - getting errors demo-run
 
 [![asciicast](https://asciinema.org/a/kkjBtoQgflzBLiNDwT5KHhM1b.svg)](https://asciinema.org/a/kkjBtoQgflzBLiNDwT5KHhM1b)
+
+### page-loader - FULL demo-run
+
+[![asciicast](https://asciinema.org/a/4LPZs99Lp1SxaGy4euW8gLzB9.svg)](https://asciinema.org/a/4LPZs99Lp1SxaGy4euW8gLzB9)
