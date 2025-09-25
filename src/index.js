@@ -6,13 +6,12 @@ import debug from 'debug'
 import getData from './getData.js'
 import downloadFiles from './downloadFiles.js'
 import generateName from './generateName.js'
-// import Listr from 'listr'
 
 const log = debug('page-loader')
 
 const getAbsolutePath = dirpath => path.resolve(process.cwd(), dirpath)
 
-const downloadPage = (url, outputDir) => {
+const downloadPage = (url, outputDir = process.cwd()) => {
   log('download page %s to %s', url, outputDir)
 
   const absOutputDir = getAbsolutePath(outputDir)
