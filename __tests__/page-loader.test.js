@@ -59,30 +59,45 @@ test('page-loader', async () => {
   expect(downloadedScript).toBe('js {}')
 })
 
-test('page-loader: network errors', async () => {
-  nock('https://ru.hexlet.io')
-    .get('/courses')
-    .reply(404)
-  nock('https://ru.hexlet.io')
-    .get('/assets/professions/nodejs.png')
-    .reply(500)
+const networkErrors = [
+  {
+    url: 'https://ru.hexlet.io/courses',
+    status: 404,
+    expected: 'Cant get https://ru.hexlet.io/courses - Request failed with status code 404',
+  },
+  {
+    url: 'https://ru.hexlet.io/assets/professions/nodejs.png',
+    status: 500,
+    expected: 'Cant get https://ru.hexlet.io/assets/professions/nodejs.png - Request failed with status code 500',
+  },
+]
 
-  await expect(downloadPage('https://ru.hexlet.io/courses', tempDir))
-    .rejects
-    .toThrow('Cant get https://ru.hexlet.io/courses - Request failed with status code 404')
-  await expect(downloadPage('https://ru.hexlet.io/assets/professions/nodejs.png', tempDir))
-    .rejects
-    .toThrow('Cant get https://ru.hexlet.io/assets/professions/nodejs.png - Request failed with status code 500')
-})
+test.each(networkErrors)('page-loader: network error $status',
+  async ({ url, status, expected }) => {
+    nock('https://ru.hexlet.io')
+      .get(new URL(url).pathname)
+      .reply(status)
 
-test('page-loader: file operation errors', async () => {
-  nock('https://ru.hexlet.io')
-    .get('/courses')
-    .times(2)
-    .reply(200, html)
+    await expect(downloadPage(url, tempDir)).rejects.toThrow(expected)
+  })
 
-  await expect(downloadPage('https://ru.hexlet.io/courses', '/unexisting'))
-    .rejects.toThrow('ERROR: No such output directory - /unexisting')
-  await expect(downloadPage('https://ru.hexlet.io/courses', '/root'))
-    .rejects.toThrow('ERROR: No access to output directory - /root')
-})
+const fileErrors = [
+  {
+    path: '/unexisting',
+    expected: 'ERROR: No such output directory - /unexisting',
+  },
+  {
+    path: '/root',
+    expected: 'ERROR: No access to output directory - /root',
+  },
+]
+
+test.each(fileErrors)('page-loader: file operation error on path $path',
+  async ({ path, expected }) => {
+    nock('https://ru.hexlet.io')
+      .get('/courses')
+      .reply(200, html)
+
+    await expect(downloadPage('https://ru.hexlet.io/courses', path))
+      .rejects.toThrow(expected)
+  })
