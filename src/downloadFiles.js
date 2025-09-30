@@ -8,27 +8,23 @@ import Listr from 'listr'
 const log = debug('page-loader')
 
 const tasks = ($, links, url, filesDirPath, selector, attr) => new Listr(links
-  .filter((link) => {
-    const absLink = new URL(link, url)
-    if (absLink.hostname === new URL(url).hostname) {
-      return link
-    }
-  })
   .map((link) => {
     const absLink = new URL(link, url)
-    return {
-      title: `${absLink.href}`,
-      task: () => downloadFile($, link, absLink, filesDirPath, selector, attr),
+    if (absLink.hostname === new URL(url).hostname) {
+      return {
+        title: `${absLink.href}`,
+        task: () => downloadFile($, link, absLink, filesDirPath, selector, attr),
+      }
     }
-  }), {
+    else return null
+  })
+  .filter(link => link !== null && link !== undefined), {
   concurrent: true,
   exitOnError: false,
 })
 
 const downloadFile = ($, link, absLink, filesDirPath, selector, attr) => {
-  const fileName = path.extname(absLink.pathname)
-    ? generateName(absLink.href).replace(/-(?=[a-zA-Z0-9]+$)/, '.')
-    : generateName(absLink.href) + '.html'
+  const fileName = generateName(absLink.href)
   const filePath = path.join(filesDirPath, fileName)
 
   log('download file %s', absLink.href)

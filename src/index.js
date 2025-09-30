@@ -1,7 +1,6 @@
 import path from 'path'
 import fsp from 'fs/promises'
 import * as cheerio from 'cheerio'
-import * as prettier from 'prettier'
 import debug from 'debug'
 import getData from './getData.js'
 import downloadFiles from './downloadFiles.js'
@@ -15,9 +14,9 @@ const downloadPage = (url, outputDir = process.cwd()) => {
   log('download page %s to %s', url, outputDir)
 
   const absOutputDir = getAbsolutePath(outputDir)
-  const fileName = generateName(url) + '.html'
+  const fileName = generateName(url)
   const filePath = path.join(absOutputDir, fileName)
-  const filesDirName = generateName(url) + '_files'
+  const filesDirName = generateName(url).replace('.html', '_files')
   const filesDirPath = path.join(absOutputDir, filesDirName)
 
   return fsp.access(absOutputDir)
@@ -37,12 +36,8 @@ const downloadPage = (url, outputDir = process.cwd()) => {
         .then(() => $)
     })
     .then(($) => {
-      log('files downloaded, format HTML')
-      return prettier.format($.html(), { parser: 'html' })
-    })
-    .then((formattedHtml) => {
       log('write to file %s', filePath)
-      return fsp.writeFile(filePath, formattedHtml)
+      return fsp.writeFile(filePath, $.html())
     })
     .then(() => {
       log('done, output file is %s', filePath)
@@ -55,6 +50,9 @@ const downloadPage = (url, outputDir = process.cwd()) => {
       }
       if (err.code === 'EACCES') {
         throw new Error(`ERROR: No access to output directory - ${outputDir}`)
+      }
+      if (err.message.startsWith('Cant get ')) {
+        throw err
       }
       throw new Error(`ERROR: ${err.message}`)
     })
