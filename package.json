@@ -18,7 +18,7 @@
     "page-loader": "bin/page-loader.js"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest"
   },
   "devDependencies": {
     "@eslint/create-config": "^1.10.0",
