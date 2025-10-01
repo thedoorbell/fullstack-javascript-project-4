@@ -16,9 +16,9 @@ const tasks = ($, links, url, filesDirPath, selector, attr) => new Listr(links
         task: () => downloadFile($, link, absLink, filesDirPath, selector, attr),
       }
     }
-    else return null
+    return null
   })
-  .filter(link => link !== null && link !== undefined), {
+  .filter(Boolean), {
   concurrent: true,
   exitOnError: false,
 })
@@ -48,9 +48,7 @@ const downloadFile = ($, link, absLink, filesDirPath, selector, attr) => {
     })
 }
 
-const downloadFiles = ($, url, filesDirPath, selector, attr) => {
-  const links = $(selector).map((i, tag) => $(tag).attr(attr)).get()
-
+const downloadFiles = ($, url, filesDirPath, selector, attr, links) => {
   if (links.length === 0) {
     log('no %s links', selector)
     return Promise.resolve()

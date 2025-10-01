@@ -10,6 +10,12 @@ const log = debug('page-loader')
 
 const getAbsolutePath = dirpath => path.resolve(process.cwd(), dirpath)
 
+const attributeMapping = {
+  img: 'src',
+  link: 'href',
+  script: 'src',
+}
+
 const downloadPage = (url, outputDir = process.cwd()) => {
   log('download page %s to %s', url, outputDir)
 
@@ -28,11 +34,14 @@ const downloadPage = (url, outputDir = process.cwd()) => {
       log('HTML downloaded')
       const $ = cheerio.load(html)
 
-      return Promise.all([
-        downloadFiles($, url, filesDirPath, 'img', 'src'),
-        downloadFiles($, url, filesDirPath, 'link', 'href'),
-        downloadFiles($, url, filesDirPath, 'script', 'src'),
-      ])
+      return Promise.all(
+        Object.entries(attributeMapping).map(([tag, attr]) => {
+          const $elements = $(tag).toArray()
+          const elementsWithUrls = $elements
+            .map(el => $(el).attr(attr))
+            .filter(Boolean)
+          return downloadFiles($, url, filesDirPath, tag, attr, elementsWithUrls)
+        }))
         .then(() => $)
     })
     .then(($) => {
